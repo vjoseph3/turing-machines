@@ -89,9 +89,9 @@
 
 ;; A HaltingState (HS) is (anyof 'A 'R)
 
-;; A State is (anyof Nat HS)
+;; A State is (anyof Whole HS)
 
-;; A Symbol is (anyof Whole '_)
+;; A Symbol is (anyof Nat '_)
 
 ;; A Move is (anyof 'r 'l)
 
@@ -101,11 +101,11 @@
 ;; A TuringMachine (TM) is a
 ;;   (tm Whole Whole (State Symbol -> Step))
 ;;   where whenever the transition function is given
-;;     - a State that is a Nat <= tm-max-state and
-;;     - a Symbol that is '_ or a Whole <= tm-max-symbol
+;;     - a State that is a Whole <= tm-max-state and
+;;     - a Symbol that is '_ or a Nat <= tm-max-symbol
 ;;   it produces a Step where
-;;     - step-state is an HS or a Nat <= tm-max-state and
-;;     - step-symbol is '_ or a Whole <= tm-max-symbol
+;;     - step-state is an HS or a Whole <= tm-max-state and
+;;     - step-symbol is '_ or a Nat <= tm-max-symbol
 (struct tm (max-state max-symbol transition))
 
 ;; A Config is a (config (listof Symbol) State (listof Symbol))
@@ -136,8 +136,8 @@
   ;;   from the configuration before
   ;; Requires:
   ;;   - every Symbol in before-prefix and before-suffix is either
-  ;;     '_ or a Whole <= tm-max-symbol;
-  ;;   - before-state is a Nat <= tm-max-state.
+  ;;     '_ or a Nat <= tm-max-symbol;
+  ;;   - before-state is a Whole <= tm-max-state.
   simulate-step
 
   ;; TM (listof Symbol) -> Config
@@ -145,7 +145,7 @@
   ;; produces the halting configuration of tm when given input
   ;; Requires:
   ;;   - every Symbol in input is either '_ or
-  ;;     a Whole <= tm-max-symbol;
+  ;;     a Nat <= tm-max-symbol;
   ;;   - tm halts on input.
   simulate
 
@@ -213,8 +213,8 @@
 ;;   initial configuration
 ;; Requires:
 ;;   - every Symbol in initial-prefix and initial-suffix is either
-;;     '_ or a Whole <= tm-max-symbol;
-;;   - initial-state is either an HS or a Nat <= tm-max-state;
+;;     '_ or a Nat <= tm-max-symbol;
+;;   - initial-state is either an HS or a Whole <= tm-max-state;
 ;;   - tm halts when run from initial.
 (define (simulate/config tm initial)
   (if (halting-state? (config-state initial))
