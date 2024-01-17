@@ -87,9 +87,9 @@
 
 ;; A Whole is an integer greater than or equal to 1
 
-;; An AcceptingState (AS) is (anyof 'A 'R)
+;; A HaltingState (HS) is (anyof 'A 'R)
 
-;; A State is (anyof Nat AS)
+;; A State is (anyof Nat HS)
 
 ;; A Symbol is (anyof Whole '_)
 
@@ -104,7 +104,7 @@
 ;;     - a State that is a Nat <= tm-max-state and
 ;;     - a Symbol that is '_ or a Whole <= tm-max-symbol
 ;;   it produces a Step where
-;;     - step-state is an AS or a Nat <= tm-max-state and
+;;     - step-state is an HS or a Nat <= tm-max-state and
 ;;     - step-symbol is '_ or a Whole <= tm-max-symbol
 (struct tm (max-state max-symbol transition))
 
@@ -214,17 +214,17 @@
 ;; Requires:
 ;;   - every Symbol in initial-prefix and initial-suffix is either
 ;;     '_ or a Whole <= tm-max-symbol;
-;;   - initial-state is either an AS or a Nat <= tm-max-state;
+;;   - initial-state is either an HS or a Nat <= tm-max-state;
 ;;   - tm halts when run from initial.
 (define (simulate/config tm initial)
-  (if (accepting-state? (config-state initial))
+  (if (halting-state? (config-state initial))
       initial
       (simulate/config tm (simulate-step tm initial))))
 
 ;; ---------------
 ;; State -> Bool
-;; produces true iff state is an AS
-(define (accepting-state? state)
+;; produces true iff state is an HS
+(define (halting-state? state)
   (not (integer? state)))
 
 ;; ---------------
